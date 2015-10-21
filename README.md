@@ -10,12 +10,12 @@
 
 ## Installation
 
-	git clone https://github.com/kadowa/omp-xmdp-oai-plugin omp/plugins/oaiMetadataFormats/xmdp
+	git clone https://github.com/ub-heidelberg/xmdp omp/plugins/oaiMetadataFormats/
 	php omp/tools/upgrade.php upgrade
 
 ## Bugs / Issues
 
-You can report issues here: <https://github.com/kadowa/omp-xmdp-oai-plugin/issues>
+You can report issues here: <https://github.com/ub-heidelberg/xmdp/issues>
 
 ## License
 
@@ -24,10 +24,10 @@ This software is released under the the [GNU General Public License][gpl-licence
 See the [COPYING][gpl-licence] included with OMP for the terms of this license.
 
 [pkp]: http://pkp.sfu.ca/
-[xmdp22]: https://github.com/kadowa/omp-xmdp-metadata-plugin
-[xmdp22-readme]: https://github.com/kadowa/omp-xmdp-metadata-plugin/blob/master/README.md
+[xmdp22]: https://github.com/ub-heidelberg/xmdp22
+[xmdp22-readme]: https://github.com/ub-heidelberg/xmdp22/blob/master/README.md
 [xmetadissplus]: http://www.dnb.de/DE/Standardisierung/Metadaten/xMetadissPlus.html
-[urn_dnb]: https://github.com/kadowa/omp-dnb-urn-plugin
+[urn_dnb]: https://github.com/ub-heidelberg/urn_dnb
 [dnb]: http://www.dnb.de
 [gpl-licence]: https://github.com/pkp/omp/blob/master/docs/COPYING
 
