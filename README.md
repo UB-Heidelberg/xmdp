@@ -1,6 +1,6 @@
 # XMetaDissPlus OAI Plugin
 
-> The XMetaDissPlus OAI plugin for OMP has been developed at UB Heidelberg. It enables the OAI transfer of metadata that is consistent with the [XMetaDissPlus][xmetadissplus] format defined by the [Deutsche Nationalbibliothek][dnb] (DNB).
+> The XMetaDissPlus OAI plugin for [Open Monograph Press][omp] (OMP) has been developed at UB Heidelberg. It enables the OAI transfer of metadata that is consistent with the [XMetaDissPlus][xmetadissplus] format defined by the [Deutsche Nationalbibliothek][dnb] (DNB).
 
 ## Requirements
 
