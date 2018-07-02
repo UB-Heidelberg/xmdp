@@ -22,8 +22,8 @@ class OAIMetadataFormatPlugin_XMDP extends OAIMetadataFormatPlugin {
 	/**
 	 * Constructor
 	 */
-	function OAIMetadataFormatPlugin_XMDP() {
-		parent::OAIMetadataFormatPlugin();
+	function __construct() {
+		parent::__construct();
 
 		$oai = new XMDPOAI();
 		HookRegistry::register('PressOAI::sets', array(&$oai, 'sets'));
