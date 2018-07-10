@@ -26,7 +26,7 @@ class OAIMetadataFormat_XMDP extends OAIMetadataFormat {
 	/**
 	 * @copydoc OAIMetadataFormat::toXML
 	 */
-	function toXml(&$record, $format = null) {
+	function toXml($record, $format = null) {
 		$publicationFormat =& $record->getData('publicationFormat');
 		$description = $publicationFormat->extractMetadata(new Xmdp22Schema());
 		

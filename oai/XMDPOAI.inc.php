@@ -52,7 +52,7 @@ class XMDPOAI extends PressOAI {
 			$sets = array_merge($sets, $oaidao->getSets($pressId, $offset, $limit, $total));
 			
 			// Additional publication format sets
-			$pubFormats =& $publicationFormatDAO->getByPressId($pressId);
+			$pubFormats =& $publicationFormatDAO->getByContextId($pressId);
 			$pubFormatNames = array();
 			foreach ($pubFormats->toArray() as $pubFormat) {
 				if ( $pubFormat->getIsAvailable() ) {
@@ -178,19 +178,27 @@ class XMDPOAI extends PressOAI {
 	 */	
 	function _addPublicationFormatSets($hookName, $params) {
 		$record =& $params[0];
-		$row = $params[1];
-
- 		$pressDAO =& DAORegistry::getDAO('PressDAO');
- 		$pressId = $row['press_id'];
-		$press = $pressDAO->getById($pressId);
-		
+		$row = $params[1];		
+		error_log('XMDPOAI: row = ' . var_export($row, true));
 		$publicationFormatDAO =& DAORegistry::getDAO('PublicationFormatDAO');
-		$pubFormatId = $row['data_object_id'];
-		$pubFormat = $publicationFormatDAO->getById($pubFormatId);
-		if ( isset($pubFormat) ) {
-			$record->sets[] = $press->getLocalizedAcronym() . ':pubf_' . strtolower($pubFormat->getLocalizedName());
+		if( isset($row['tombstone_id']) ) {
+			$pressAcronym = explode(":", $row['set_spec'])[0];
+			$pubFormat = $publicationFormatDAO->getById($row['data_object_id']);
 		}
-		
+		else if( is_a($record, 'OAIRecord')) {
+			$pubFormat = $record->getData('publicationFormat');
+			$press = $record->getData('press');
+			$pressAcronym = $press->getPath();
+		}
+		else {
+			$pressDAO =& DAORegistry::getDAO('PressDAO');
+			$press = $pressDAO->getById($row['press_id']);
+			$pressAcronym = $press->getPath();
+			$pubFormat = $publicationFormatDAO->getById($row['data_object_id']);
+		}		
+		if ( isset($pubFormat) ) {
+			$record->sets[] =  $pressAcronym . ':pubf_' . strtolower($pubFormat->getLocalizedName());
+		}
 		return False;
 	}
 }
