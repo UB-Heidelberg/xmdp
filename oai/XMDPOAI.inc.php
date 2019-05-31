@@ -17,11 +17,11 @@
 import('classes.oai.omp.PressOAI');
 
 class XMDPOAI extends PressOAI {
-	
+
 	function XMDPOAI() {
-		
+
 	}
-	
+
 	/**
 	 * Add publication format sets
 	 */
@@ -31,11 +31,11 @@ class XMDPOAI extends PressOAI {
 		$limit = $params[2];
 		$total = $params[3];
 		$sets =& $params[4];
-	
+
 		$pressDAO =& DAORegistry::getDAO('PressDAO');
 		$oaidao = DAORegistry::getDAO('OAIDAO');
 		$publicationFormatDAO =& DAORegistry::getDAO('PublicationFormatDAO');
-	
+
 		$pressId = $pressOAI->pressId;
 		if (isset($pressId)) {
 			$presses = array($pressDAO->getById($pressId));
@@ -43,14 +43,14 @@ class XMDPOAI extends PressOAI {
 			$presses =& $pressDAO->getAll();
 			$presses =& $presses->toArray();
 		}
-	
+
 		$sets = array();
 		foreach ($presses as $press) {
 			$pressId = $press->getId();
-			
+
 			// Default press and series sets
 			$sets = array_merge($sets, $oaidao->getSets($pressId, $offset, $limit, $total));
-			
+
 			// Additional publication format sets
 			$pubFormats =& $publicationFormatDAO->getByContextId($pressId);
 			$pubFormatNames = array();
@@ -60,19 +60,19 @@ class XMDPOAI extends PressOAI {
 					$pubFormatNames[$name] = "Publication Format " . strtoupper($name);
 				}
 			}
-		
+
 			foreach ( $pubFormatNames as $abbrev => $name ) {
 				array_push($sets, new OAISet($press->getLocalizedAcronym() . ':pubf_' . urlencode($abbrev), $name, ''));
 			}
 		}
-	
+
  		if ($offset != 0) {
 			$sets = array_slice($sets, $offset);
 		}
-	
+
 		return true;
 	}
-	
+
 	/**
 	 *  Handle requests for records if a publication format set is fiven
 	 */
@@ -85,13 +85,13 @@ class XMDPOAI extends PressOAI {
 		$limit = $params[5];
 		$total = $params[6];
 		$records =& $params[7];
-		
+
 		$oaidao = DAORegistry::getDAO('OAIDAO');
 		$pressDAO =& DAORegistry::getDAO('PressDAO');
-		
+
 		$pressId = $pressOAI->pressId;
 		$press = $pressDAO->getById($pressId);
-		
+
 		$records = array();
 		// Handle publication format sets
 		if ( isset($set) && strpos($set, ':pubf_') != False ) {
@@ -109,7 +109,7 @@ class XMDPOAI extends PressOAI {
 				// No way to handle multiple presses with the same acronym (pretty sure OMP does not allow this to happen)
 				assert(false);
 			}
-			
+
 			// Keep only records with the requested publication format
 			// FIXME: This might be slow for a large number of records -- handle on database level?
 			$allPressRecords = $oaidao->getRecords(array($pressOAI->pressId, null), $from, $until, $set, $offset, $limit, $total);
@@ -133,14 +133,14 @@ class XMDPOAI extends PressOAI {
 		$limit = $params[5];
 		$total = $params[6];
 		$records =& $params[7];
-		
+
 		$oaidao = DAORegistry::getDAO('OAIDAO');
 		$pressDAO =& DAORegistry::getDAO('PressDAO');
 		$publicationFormatDAO =& DAORegistry::getDAO('PublicationFormatDAO');
-		
+
 		$pressId = $pressOAI->pressId;
 		$press = $pressDAO->getById($pressId);
-		
+
 		$records = array();
 		// Handle publication format sets
 		if ( isset($set) && strpos($set, ':pubf_') != False ) {
@@ -157,7 +157,7 @@ class XMDPOAI extends PressOAI {
 				// No way to handle multiple presses with the same acronym (pretty sure OMP does not allow this to happen)
 				assert(false);
 			}
-				
+
 			// Keep only records with the requested publication format
 			// FIXME: This might be slow for a large number of records -- handle on database level?
 			$allPressRecords = $oaidao->getIdentifiers(array($pressOAI->pressId, null), $from, $until, $set, $offset, $limit, $total);
@@ -169,17 +169,17 @@ class XMDPOAI extends PressOAI {
 				}
 			}
 			return True;
-		}	
+		}
 		return False;
 	}
-	
+
 	/**
 	 * Add publication format sets to record
-	 */	
+	 */
 	function _addPublicationFormatSets($hookName, $params) {
 		$record =& $params[0];
-		$row = $params[1];		
-		error_log('XMDPOAI: row = ' . var_export($row, true));
+		$row = $params[1];
+
 		$publicationFormatDAO =& DAORegistry::getDAO('PublicationFormatDAO');
 		if( isset($row['tombstone_id']) ) {
 			$pressAcronym = explode(":", $row['set_spec'])[0];
@@ -195,7 +195,7 @@ class XMDPOAI extends PressOAI {
 			$press = $pressDAO->getById($row['press_id']);
 			$pressAcronym = $press->getPath();
 			$pubFormat = $publicationFormatDAO->getById($row['data_object_id']);
-		}		
+		}
 		if ( isset($pubFormat) ) {
 			$record->sets[] =  $pressAcronym . ':pubf_' . strtolower($pubFormat->getLocalizedName());
 		}
